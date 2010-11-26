@@ -1,0 +1,11 @@
+cron:
+- description: fetch tuans
+  url: /_/crontab/fetch
+  schedule: every 2 hours
+  timezone: Asia/Shanghai
+
+- description: post sina miniblog
+  url: /_/crontab/post
+  schedule: every 15 minutes
+  timezone: Asia/Shanghai
+

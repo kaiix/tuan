@@ -1,0 +1,26 @@
+application: tuan365serv
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /_/crontab/.*
+  script: crontab.py
+  login: admin
+
+builtins:
+- datastore_admin: on
+- appstats: on
+
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?index\.yaml
+- ^(.*/)?index\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^(.*/)?.*\.bak$
+- ^(.*/)?.*\.gitignore$
