@@ -1,15 +1,17 @@
-from datetime import datetime
+import logging
+from datetime import datetime, timedelta
 
 from google.appengine.ext.webapp import RequestHandler
 from google.appengine.ext.webapp import WSGIApplication
 from google.appengine.ext.webapp.util import run_wsgi_app
 
-#TODO logging
+def _now():
+    return datetime.utcnow() + timedelta(hours=+8)
 
 class TuanFetch(RequestHandler):
     def get(self):
         from tuan800_gae import fetch
-        now = datetime.now()
+        now = _now()
         if now.hour > 6:
             fetch()
         else:
@@ -18,19 +20,23 @@ class TuanFetch(RequestHandler):
 class SinaPost(RequestHandler):
     def get(self):
         from post import post
-        now = datetime.now()
-        if now.hour > 8 and now.hour < 10:
-            post()
+        now = _now()
+        if now.hour > 8 and now.hour < 9:
+            post(2)
         else:
-            print 'overtime'
-        if now.hour > 12 and now.hour < 15:
-            post()
+            logging.info('[%s] overtime'%now.strftime("%H:%M:%S"))
+        if now.hour > 10 and now.hour < 12:
+            post(2)
         else:
-            print 'overtime'
-        if now.hour > 17 and now.hour < 22:
-            post()
+            logging.info('[%s] overtime'%now.strftime("%H:%M:%S"))
+        if now.hour > 15 and now.hour < 18:
+            post(3)
         else:
-            print 'overtime'
+            logging.info('[%s] overtime'%now.strftime("%H:%M:%S"))
+        if now.hour > 20 and now.hour < 21:
+            post(1)
+        else:
+            logging.info('[%s] overtime'%now.strftime("%H:%M:%S"))
 
 application = WSGIApplication([
                               ('/_/crontab/fetch', TuanFetch),

@@ -1,3 +1,4 @@
+import time
 from urllib import urlencode
 
 from google.appengine.api import urlfetch
@@ -24,12 +25,14 @@ def tsina_post(content):
                           headers={'Content-Type': 'application/x-www-form-urlencoded'})
     print resp.status_code
 
-def post():
-    tuans = get_tuans_from_db(5)
+#XXX make it a task?
+def post(amount):
+    tuans = get_tuans_from_db(amount)
     for tuan in tuans:
         tsina_post(tuan.url+' '+tuan.txt)
+        time.sleep(2)
         tuan.unread = False
         tuan.put()
 
 if __name__ == '__main__':
-    post()
+    post(5)
