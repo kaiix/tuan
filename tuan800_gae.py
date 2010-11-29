@@ -3,7 +3,7 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import db
 
 from BeautifulSoup import BeautifulSoup
-from txt import smart_unicode
+from utils import smart_unicode
 
 DEBUG = True
 
@@ -40,8 +40,10 @@ def fetch_tuans():
 
 def fetch():
     tuans = fetch_tuans()
-    for url, txt in tuans.items():
-        save_tuan(url, txt)
+    if tuans is not None:
+        for url, txt in tuans.iteritems():
+            save_tuan(url, txt)
+    return tuans
 
 if __name__ == '__main__':
     fetch()

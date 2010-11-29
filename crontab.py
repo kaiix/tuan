@@ -1,9 +1,12 @@
 import logging
 from datetime import datetime, timedelta
 
+from google.appengine.api.labs import taskqueue
 from google.appengine.ext.webapp import RequestHandler
 from google.appengine.ext.webapp import WSGIApplication
 from google.appengine.ext.webapp.util import run_wsgi_app
+
+from tuan800_gae import Tuan
 
 def _now():
     return datetime.utcnow() + timedelta(hours=+8)
@@ -16,9 +19,6 @@ class TuanFetch(RequestHandler):
             logging.error('Failed fetching tuans!')
         return
 
-#def post(amount):
-#    print amount
-
 def event(start_hour, end_hour, do_work, args=(), kwargs={}):
     now = _now()
     if start_hour <= now.hour < end_hour:
@@ -26,16 +26,26 @@ def event(start_hour, end_hour, do_work, args=(), kwargs={}):
         return True
     return False
 
-class SinaPost(RequestHandler):
+def get_tuans_from_db(amount):
+    tuan_query = Tuan.all().filter('unread =', True).order('-date')
+    return tuan_query.fetch(amount)
+
+def async_post(amount):
+    tuans = get_tuans_from_db(amount)
+    for tuan in tuans:
+        taskqueue.add(url='/_/tasks/post', params={'key': str(tuan.key())})
+        logging.info('New task add to queue: %s' % str(tuan.key()))
+    return True
+
+class TuanPost(RequestHandler):
     def get(self):
-        from post import post
-        result = event(8, 9, post, (2,))
+        result = event(8, 9, async_post, (2,))
         if result: return
-        result = event(10, 12, post, (2,))
+        result = event(10, 12, async_post, (2,))
         if result: return
-        result = event(15, 18, post, (3,))
+        result = event(15, 18, async_post, (3,))
         if result: return
-        result = event(20, 21, post, (1,))
+        result = event(20, 21, async_post, (1,))
         if result: return
 
         self.timeover()
@@ -48,7 +58,7 @@ class SinaPost(RequestHandler):
 
 application = WSGIApplication([
                               ('/_/crontab/fetch', TuanFetch),
-                              ('/_/crontab/post', SinaPost),
+                              ('/_/crontab/post', TuanPost),
                               ], debug=True)
 
 def main():

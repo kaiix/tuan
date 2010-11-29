@@ -1,11 +1,15 @@
 application: tuan365serv
-version: 1
+version: 2
 runtime: python
 api_version: 1
 
 handlers:
 - url: /_/crontab/.*
   script: crontab.py
+  login: admin
+
+- url: /_/tasks/.*
+  script: process.py
   login: admin
 
 builtins:
