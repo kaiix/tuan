@@ -43,7 +43,6 @@ def fetch():
     tuans = fetch_tuans()
     for url, txt in tuans.items():
         save_tuan(url, txt)
-        #print '[%s] %s' % url, txt
 
 if __name__ == '__main__':
     fetch()

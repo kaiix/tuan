@@ -1,5 +1,5 @@
-import time
 from urllib import urlencode
+import logging
 
 from google.appengine.api import urlfetch
 
@@ -30,9 +30,9 @@ def post(amount):
     tuans = get_tuans_from_db(amount)
     for tuan in tuans:
         tsina_post(tuan.url+' '+tuan.txt)
-        time.sleep(2)
         tuan.unread = False
         tuan.put()
+        logging.info('New post: %s' % tuan.url)
 
 if __name__ == '__main__':
     post(5)
