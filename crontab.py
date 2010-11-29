@@ -11,11 +11,9 @@ def _now():
 class TuanFetch(RequestHandler):
     def get(self):
         from tuan800_gae import fetch
-        now = _now()
-        if now.hour > 6:
-            fetch()
-        else:
-            logging.info('[%s] overtime' % now.strftime("%H:%M:%S"))
+        tuans = fetch()
+        if tuans is None:
+            logging.error('Failed fetching tuans!')
         return
 
 #def post(amount):

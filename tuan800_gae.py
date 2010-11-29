@@ -20,24 +20,23 @@ def save_tuan(url, txt):
         return tuan
     return None
 
+def get_tuans(content):
+    soup = BeautifulSoup(content)
+    tuans = {}
+    for tag in soup.findAll('div', attrs={'class': 'new_ms_bt'}):
+        tuans[tag.p.a['href']] = smart_unicode(tag.p.a.text)
+    return tuans
+
 def fetch_tuans():
     tuan800 = 'http://www.tuan800.com/beijing?only_today_new=yes'
-    
     try:
         resp = urlfetch.fetch(tuan800)
-    except urlfetch.Error, e:
-        print e
+    except urlfetch.Error:
         return None
-
     if resp.status_code == 200:
         content = resp.content.decode('utf-8')
-        soup = BeautifulSoup(content)
-        tuans = {}
-        for tag in soup.findAll('div', attrs={'class': 'new_ms_bt'}):
-            tuans[tag.p.a['href']] = smart_unicode(tag.p.a.text)
-        return tuans
-    else:
-        return None
+        return get_tuans(content)
+    return None
 
 def fetch():
     tuans = fetch_tuans()

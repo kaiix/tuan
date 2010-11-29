@@ -1,7 +1,7 @@
 cron:
 - description: fetch tuans
   url: /_/crontab/fetch
-  schedule: every 3 hours
+  schedule: every 6 hours
   timezone: Asia/Shanghai
 
 - description: post sina miniblog
