@@ -34,18 +34,18 @@ def async_post(amount):
     tuans = get_tuans_from_db(amount)
     for tuan in tuans:
         taskqueue.add(url='/_/tasks/post', params={'key': str(tuan.key())})
-        logging.info('New task add to queue: %s' % str(tuan.key()))
+        logging.info('New task: %s' % str(tuan.key()))
     return True
 
 class TuanPost(RequestHandler):
     def get(self):
         result = event(8, 9, async_post, (2,))
         if result: return
-        result = event(10, 12, async_post, (2,))
+        result = event(10, 12, async_post, (3,))
         if result: return
         result = event(15, 18, async_post, (3,))
         if result: return
-        result = event(20, 21, async_post, (1,))
+        result = event(20, 22, async_post, (2,))
         if result: return
 
         self.timeover()

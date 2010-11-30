@@ -5,17 +5,17 @@ from google.appengine.ext.webapp import WSGIApplication
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 from post import tsina_post
+from tuan800_gae import Tuan
 
-from google.appengine.ext import db
 class SinaPost(RequestHandler):
     def post(self):
         key = self.request.get('key')
-        tuan = db.get(db.Key(key))
+        tuan = Tuan.get(key)
         if tuan:
             tsina_post(tuan.url+' '+tuan.txt)
             tuan.unread = False
             tuan.put()
-            logging.info('New post: %s' % key)
+            logging.info('Post: %s' % key)
         else:
             logging.info('Error: no tuan found!')
 
