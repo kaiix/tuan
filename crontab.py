@@ -45,7 +45,7 @@ class TuanPost(RequestHandler):
         if result: return
         result = event(15, 18, async_post, (3,))
         if result: return
-        result = event(20, 22, async_post, (2,))
+        result = event(20, 22, async_post, (1,))
         if result: return
 
         self.timeover()
